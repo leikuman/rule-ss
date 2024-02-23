@@ -1,5 +1,5 @@
 /**
- * 更新日期：2024-02-12 17:24:40
+ * 更新日期：2024-02-23 18:29:01
  * 用法：Sub-Store 脚本操作添加
  * rename.js 以下是此脚本支持的参数，必须以 # 为开头多个参数使用"&"连接，参考上述地址为例使用参数。 禁用缓存url#noCache
  *
@@ -7,10 +7,12 @@
  * [in=] 自动判断机场节点名类型 优先级 zh(中文) -> flag(国旗) -> quan(英文全称) -> en(英文简写)
  * 如果不准的情况, 可以加参数指定:
  *
+ * [nm]    保留没有匹配到的节点
  * [in=zh] 或in=cn识别中文
  * [in=en] 或in=us 识别英文缩写
  * [in=flag] 或in=gq 识别国旗 如果加参数 in=flag 则识别国旗 脚本操作前面不要添加国旗操作 否则移除国旗后面脚本识别不到
  * [in=quan] 识别英文全称
+
  *
  * [out=]   输出节点名可选参数: (cn或zh ，us或en ，gq或flag ，quan) 对应：(中文，英文缩写 ，国旗 ，英文全称) 默认中文 例如 [out=en] 或 out=us 输出英文缩写
  *** 分隔符参数
@@ -49,7 +51,8 @@ const nx = inArg.nx || false,
   numone = inArg.one || false,
   debug = inArg.debug || false,
   clear = inArg.clear || false,
-  addflag = inArg.flag || false;
+  addflag = inArg.flag || false,
+  nm = inArg.nm || false;
 
 const FGF = inArg.fgf == undefined ? " " : decodeURI(inArg.fgf),
   XHFGF = inArg.sn == undefined ? " " : decodeURI(inArg.sn),
@@ -224,12 +227,18 @@ function operator(pro) {
     const findKey = Object.entries(Allmap).find(([key]) =>
       e.name.includes(key)
     );
-    const findKeyValue = findKey ? findKey[1] : null;
-    e.name = findKeyValue;
-    // console.log(findKeyValue);
-    let keyover = [],
-      usflag = "";
-    if (findKeyValue !== null) {
+    let firstName = "",
+      nNames = "";
+
+    if (nf) {
+      firstName = FNAME;
+    } else {
+      nNames = FNAME;
+    }
+    if (findKey?.[1]) {
+      const findKeyValue = findKey[1];
+      let keyover = [],
+        usflag = "";
       if (addflag) {
         const index = outList.indexOf(findKeyValue);
         if (index !== -1) {
@@ -237,18 +246,16 @@ function operator(pro) {
           usflag = usflag === "🇹🇼" ? "🇨🇳" : usflag;
         }
       }
-      let firstName = "",
-        nNames = "";
-
-      if (nf) {
-        firstName = FNAME;
-      } else {
-        nNames = FNAME;
-      }
       keyover = keyover
         .concat(firstName, usflag, nNames, findKeyValue, retainKey, ikey, ikeys)
         .filter((k) => k !== "");
       e.name = keyover.join(FGF);
+    } else {
+      if (nm) {
+        e.name = FNAME + FGF + e.name;
+      } else {
+        e.name = null;
+      }
     }
   });
   pro = pro.filter((e) => e.name !== null);
