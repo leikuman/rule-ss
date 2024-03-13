@@ -5,13 +5,23 @@
 #!homepage = https://github.com/Keywos/rule/blob/main/script/wy
 #!icon = https://raw.githubusercontent.com/Keywos/rule/main/tv/app/144px/Netease.png
 #https://raw.githubusercontent.com/LimeAroma/Loon/main/Plugin/NeteaseCloudMusic_remove_ads.plugin
-#!select = 首页卡片数量, 1, 2, 3, 4, 5, 6
+
 #!select = 隐藏漫游标签, 是, 否
 #!select = 隐藏动态标签, 是, 否
 #!select = 隐藏推荐标签, 是, 否
 #!select = 隐藏发现标签, 是, 否
+#!select = 以下为首页卡片板块, --
+#!select = 隐藏首页问候语, 是, 否
+#!select = 隐藏首页排行榜, 是, 否
+#!select = 隐藏首页每日推荐, 是, 否
+#!select = 隐藏首页推荐歌单, 是, 否
+#!select = 隐藏首页最近常听, 是, 否
+#!select = 隐藏首页雷达歌单, 是, 否
+#!select = 隐藏首页音乐合伙人, 是, 否
+#!select = 隐藏首页推荐专属歌单, 是, 否
+#!select = 隐藏首页你的专属歌单, 是, 否
 
-#!date = 2024-03-10 09:17:37
+#!date = 2024-03-13 17:59:58
 
 [MITM]
 hostname = interface.music.163.com, interface3.music.163.com, ipv4.music.163.com
@@ -21,7 +31,6 @@ DOMAIN,iadmusicmat.music.126.net,REJECT
 DOMAIN,iadmat.nosdn.127.net,REJECT
 DOMAIN,iadmatapk.nosdn.127.net,REJECT
 DOMAIN,httpdns.n.netease.com,REJECT
-
 
 [Rewrite]
 ^https?:\/\/httpdns.n\.netease\.com - reject
