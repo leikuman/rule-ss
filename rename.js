@@ -1,5 +1,5 @@
 /**
- * 更新日期：2024-02-26 18:42:56
+ * 更新日期：2024-04-05 14:11:06
  * 用法：Sub-Store 脚本操作添加
  * rename.js 以下是此脚本支持的参数，必须以 # 为开头多个参数使用"&"连接，参考上述地址为例使用参数。 禁用缓存url#noCache
  *
@@ -170,13 +170,35 @@ function operator(pro) {
   const BLKEYS = BLKEY ? BLKEY.split("+") : "";
 
   pro.forEach((e) => {
+    let bktf = false, ens = e.name
     // 预处理 防止预判或遗漏
     Object.keys(rurekey).forEach((ikey) => {
       if (rurekey[ikey].test(e.name)) {
         e.name = e.name.replace(rurekey[ikey], ikey);
+      if (BLKEY) {
+        bktf = true
+        let BLKEY_REPLACE = "",
+        re = false;
+      BLKEYS.forEach((i) => {
+        if (i.includes(">") && ens.includes(i.split(">")[0])) {
+          if (i.split(">")[1]) {
+            BLKEY_REPLACE = i.split(">")[1];
+            if (rurekey[ikey].test(BLKEY_REPLACE)) {
+              e.name += " " + BLKEY_REPLACE
+            }
+            re = true;
+          }
+        } else {
+          if (rurekey[ikey].test(i) && ens.includes(i)) {
+             e.name += " " + i
+            }
+        }
+        retainKey = re
+        ? BLKEY_REPLACE
+        : BLKEYS.filter((items) => e.name.includes(items));
+      });}
       }
     });
-
     if (blockquic == "on") {
       e["block-quic"] = "on";
     } else if (blockquic == "off") {
@@ -186,7 +208,7 @@ function operator(pro) {
     }
 
     // 自定义
-    if (BLKEY) {
+    if (bktf && BLKEY) {
       let BLKEY_REPLACE = "",
         re = false;
       BLKEYS.forEach((i) => {
